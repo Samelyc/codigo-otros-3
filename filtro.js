@@ -1,63 +1,50 @@
-// Tenemos un li de productos
-
 const productos = [
-  {nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg"},
-  {nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg"},
-  {nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg"},
-  {nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg"},
-  {nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg"}
-]
+  { nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg" },
+  { nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg" },
+  { nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg" },
+  { nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg" },
+  { nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg" }
+];
 
-const li = document.getElementsByName("lista-de-productos")
+const li = document.querySelector(".lista-de-productos");
 const $i = document.querySelector('.input');
 
-for (let i = 0; i < productos.length; i++) {
-  var d = document.createElement("div")
-  d.classList.add("producto")
+// Función para mostrar productos en la lista
+const mostrarProductos = (productos) => {
+  li.innerHTML = ""; // Limpiar la lista actual
+  productos.forEach(producto => {
+    const d = document.createElement("div");
+    d.classList.add("producto");
 
-  var ti = document.createElement("p")
-  ti.classList.add("titulo")
-  ti.textContent = productos[i].nombre
-  
-  var imagen = document.createElement("img");
-  imagen.setAttribute('src', productos[i].img);
+    const ti = document.createElement("p");
+    ti.classList.add("titulo");
+    ti.textContent = producto.nombre;
 
-  d.appendChild(ti)
-  d.appendChild(imagen)
+    const imagen = document.createElement("img");
+    imagen.setAttribute('src', producto.img);
 
-  li.appendChild(d)
-}
+    d.appendChild(ti);
+    d.appendChild(imagen);
+    li.appendChild(d);
+  });
+};
 
-displayProductos(productos)
+// Mostrar todos los productos al inicio
+mostrarProductos(productos);
+
 const botonDeFiltro = document.querySelector("button");
 
 botonDeFiltro.onclick = function() {
-  while (li.firstChild) {
-    li.removeChild(li.firstChild);
-  }
+  const texto = $i.value.toLowerCase(); // Convertir el texto a minúsculas para una búsqueda no sensible a mayúsculas
+  const productosFiltrados = filtrado(productos, texto);
+  mostrarProductos(productosFiltrados); // Mostrar solo los productos filtrados
+};
 
-  const texto = $i.value;
-  console.log(texto);
-  const productosFiltrados = filtrado(productos, texto );
-
-  for (let i = 0; i < productosFiltrados.length; i++) {
-    var d = document.createElement("div")
-    d.classList.add("producto")
-  
-    var ti = document.createElement("p")
-    ti.classList.add("titulo")
-    ti.textContent = productosFiltrados[i].nombre
-    
-    var imagen = document.createElement("img");
-    imagen.setAttribute('src', productosFiltrados[i].img);
-  
-    d.appendChild(ti)
-    d.appendChild(imagen)
-  
-    li.appendChild(d)
-  }
-}
-
+// Función para filtrar productos
 const filtrado = (productos = [], texto) => {
-  return productos.filter(item => item.tipo.includes(texto) || item.color.includes(texto));
-}  
+  return productos.filter(item =>
+    item.tipo.toLowerCase().includes(texto) ||
+    item.color.toLowerCase().includes(texto) ||
+    item.nombre.toLowerCase().includes(texto)
+  );
+};
