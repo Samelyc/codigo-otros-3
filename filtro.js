@@ -6,45 +6,59 @@ const productos = [
   { nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg" }
 ];
 
-const li = document.querySelector(".lista-de-productos");
+const li = document.getElementById("lista-de-productos"); // Cambia aquí a getElementById
 const $i = document.querySelector('.input');
 
-// Función para mostrar productos en la lista
-const mostrarProductos = (productos) => {
-  li.innerHTML = ""; // Limpiar la lista actual
-  productos.forEach(producto => {
-    const d = document.createElement("div");
-    d.classList.add("producto");
+for (let i = 0; i < productos.length; i++) {
+  var d = document.createElement("div");
+  d.classList.add("producto");
 
-    const ti = document.createElement("p");
-    ti.classList.add("titulo");
-    ti.textContent = producto.nombre;
+  var ti = document.createElement("p");
+  ti.classList.add("titulo");
+  ti.textContent = productos[i].nombre;
 
-    const imagen = document.createElement("img");
-    imagen.setAttribute('src', producto.img);
+  var imagen = document.createElement("img");
+  imagen.setAttribute('src', productos[i].img);
 
-    d.appendChild(ti);
-    d.appendChild(imagen);
-    li.appendChild(d);
-  });
-};
+  d.appendChild(ti);
+  d.appendChild(imagen);
 
-// Mostrar todos los productos al inicio
-mostrarProductos(productos);
+  li.appendChild(d); // Ahora li se refiere al contenedor correcto
+}
+
+// displayProductos no está definido y no es necesario aquí, ya que estamos agregando productos directamente
 
 const botonDeFiltro = document.querySelector("button");
 
 botonDeFiltro.onclick = function() {
-  const texto = $i.value.toLowerCase(); // Convertir el texto a minúsculas para una búsqueda no sensible a mayúsculas
+  while (li.firstChild) {
+    li.removeChild(li.firstChild); // Limpiar el contenedor antes de mostrar resultados filtrados
+  }
+
+  const texto = $i.value;
+  console.log(texto);
   const productosFiltrados = filtrado(productos, texto);
-  mostrarProductos(productosFiltrados); // Mostrar solo los productos filtrados
+
+  for (let i = 0; i < productosFiltrados.length; i++) {
+    var d = document.createElement("div");
+    d.classList.add("producto");
+
+    var ti = document.createElement("p");
+    ti.classList.add("titulo");
+    ti.textContent = productosFiltrados[i].nombre;
+
+    var imagen = document.createElement("img");
+    imagen.setAttribute('src', productosFiltrados[i].img);
+
+    d.appendChild(ti);
+    d.appendChild(imagen);
+
+    li.appendChild(d);
+  }
 };
 
-// Función para filtrar productos
 const filtrado = (productos = [], texto) => {
   return productos.filter(item =>
-    item.tipo.toLowerCase().includes(texto) ||
-    item.color.toLowerCase().includes(texto) ||
-    item.nombre.toLowerCase().includes(texto)
+    item.tipo.includes(texto) || item.color.includes(texto) || item.nombre.includes(texto)
   );
 };
